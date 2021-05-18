@@ -2,43 +2,36 @@
 
 const imgElemLeft = document.getElementById('left_item_image');
 const h2ElemLeft = document.getElementById('left_item_h2');
-
 const imgElemMiddle = document.getElementById('middle_item_image');
 const h2ElemMiddle = document.getElementById('middle_item_h2');
-
 const imgElemRight = document.getElementById('right_item_image');
 const h2ElemRight = document.getElementById('right_item_h2');
-
-const ulElem = document.getElementById('results');
-
+const resultsUlElem = document.getElementById('results');
 const allChoicesSectionElem = document.getElementById('all_choices');
+const resultButtonElem = document.getElementById('resultButton');
 
-
-let counter = 0;
+let counterTotal = 0;
 
 let currentLeftItem = null;
 let currentMiddleItem = null;
 let currentRightItem = null;
 
-
-function ConstructItemObject (imgPath, h2description) {
+function Product (imgPath, h2description) {
 
   this.imagePath = imgPath;
   this.description = h2description;
   this.votes = 0;
   this.timeshow = 0;
 
-  ConstructItemObject.itemsArray.push(this);
-
+  Product.itemsArray.push(this);
 }
 
-ConstructItemObject.itemsArray = [];
+Product.itemsArray = [];
 
-ConstructItemObject.prototype.renderSingleItem = function(image, h2){
+Product.prototype.renderSingleItem = function(image, h2){
 
   image.src = this.imagePath;
   h2.textContent = this.description;
-
 };
 
 function renderThreeImages (itemLeft, itemMiddle, itemRight){
@@ -46,85 +39,104 @@ function renderThreeImages (itemLeft, itemMiddle, itemRight){
   itemLeft.renderSingleItem(imgElemLeft, h2ElemLeft);
   itemMiddle.renderSingleItem(imgElemMiddle, h2ElemMiddle);
   itemRight.renderSingleItem(imgElemRight, h2ElemRight);
-
 }
 
 function pickProduct () {
 
-  let leftProductIndex = Math.floor(Math.random()*ConstructItemObject.itemsArray.length);
+  let leftProductIndex = Math.floor(Math.random()*Product.itemsArray.length);
   let middleProductIndex;
   let rightProductIndex;
 
-  console.log(leftProductIndex);
-
   while (middleProductIndex === undefined || middleProductIndex === leftProductIndex) {
-    middleProductIndex = Math.floor(Math.random()*ConstructItemObject.itemsArray.length);
-    console.log(middleProductIndex);
+    middleProductIndex = Math.floor(Math.random()*Product.itemsArray.length);
   }
 
   while (rightProductIndex === undefined || (rightProductIndex === middleProductIndex || rightProductIndex === leftProductIndex)) {
-    rightProductIndex = Math.floor(Math.random()*ConstructItemObject.itemsArray.length);
-    console.log(rightProductIndex);
+    rightProductIndex = Math.floor(Math.random()*Product.itemsArray.length);
   }
 
-
-  currentLeftItem = ConstructItemObject.itemsArray[leftProductIndex];
-  currentMiddleItem = ConstructItemObject.itemsArray[middleProductIndex];
-  currentRightItem = ConstructItemObject.itemsArray[rightProductIndex];
-
-
+  currentLeftItem = Product.itemsArray[leftProductIndex];
+  currentMiddleItem = Product.itemsArray[middleProductIndex];
+  currentRightItem = Product.itemsArray[rightProductIndex];
 
   renderThreeImages (currentLeftItem, currentMiddleItem, currentRightItem);
 
+  currentLeftItem.timeshow++;
+  currentMiddleItem.timeshow++;
+  currentRightItem.timeshow++;
 }
 
-new ConstructItemObject('./img/bag.jpg', 'bag');
-new ConstructItemObject('./img/bag.jpg', 'banana');
-new ConstructItemObject('./img/bathroom.jpg', 'bathroom');
-new ConstructItemObject('./img/boots.jpg', 'boots');
-new ConstructItemObject('./img/breakfast.jpg', 'breakfast');
-new ConstructItemObject('./img/bubblegum.jpg', 'bubblegum');
-new ConstructItemObject('./img/chair.jpg', 'chair');
-new ConstructItemObject('./img/cthulhu.jpg', 'cthulhu');
-new ConstructItemObject('./img/dog-duck.jpg', 'dog-duck');
-new ConstructItemObject('./img/dragon.jpg', 'dragon');
-new ConstructItemObject('./img/pen.jpg', 'pen');
-new ConstructItemObject('./img/pet-sweep.jpg', 'pet-sweep');
-new ConstructItemObject('./img/scissors.jpg', 'scissors');
-new ConstructItemObject('./img/shark.jpg', 'shark');
-new ConstructItemObject('./img/sweep.png', 'sweep');
-new ConstructItemObject('./img/tauntaun.jpg', 'tauntaun');
-new ConstructItemObject('./img/unicorn.jpg', 'unicorn');
-new ConstructItemObject('./img/water-can.jpg', 'water-can');
-new ConstructItemObject('./img/wine-glass.jpg', 'wine-glass');
+new Product('./img/bag.jpg', 'bag');
+new Product('./img/banana.jpg', 'banana');
+new Product('./img/bathroom.jpg', 'bathroom');
+new Product('./img/boots.jpg', 'boots');
+new Product('./img/breakfast.jpg', 'breakfast');
+new Product('./img/bubblegum.jpg', 'bubblegum');
+new Product('./img/chair.jpg', 'chair');
+new Product('./img/cthulhu.jpg', 'cthulhu');
+new Product('./img/dog-duck.jpg', 'dog-duck');
+new Product('./img/dragon.jpg', 'dragon');
+new Product('./img/pen.jpg', 'pen');
+new Product('./img/pet-sweep.jpg', 'pet-sweep');
+new Product('./img/scissors.jpg', 'scissors');
+new Product('./img/shark.jpg', 'shark');
+new Product('./img/sweep.png', 'sweep');
+new Product('./img/tauntaun.jpg', 'tauntaun');
+new Product('./img/unicorn.jpg', 'unicorn');
+new Product('./img/water-can.jpg', 'water-can');
+new Product('./img/wine-glass.jpg', 'wine-glass');
 
+function renderResults (){
 
+  resultsUlElem.innerHTML = '';
+
+  let newH2Elem = document.createElement('h2');
+  newH2Elem.textContent = 'Here are your results';
+  resultsUlElem.appendChild(newH2Elem);
+
+  for (let i=0; i < Product.itemsArray.length; i++){
+    let newLiElem = document.createElement('li');    
+    newLiElem.textContent = `${Product.itemsArray[i].description} had ${Product.itemsArray[i].votes} votes and was seen ${Product.itemsArray[i].timeshow} times.`;
+    resultsUlElem.appendChild(newLiElem);
+  }
+}
 
 function handleClick (e) {
-  
+
   let objectClicked = e.target;
+  if (counterTotal <25){
+    if (objectClicked === imgElemLeft || objectClicked === imgElemMiddle || objectClicked === imgElemRight) {
 
-  console.log(objectClicked);
+      counterTotal++;
 
-  if (objectClicked === imgElemLeft || objectClicked === imgElemMiddle || objectClicked === imgElemRight) {
-    counter++;
+      if (objectClicked === imgElemLeft){
+        currentLeftItem.votes++;
+      } else if (objectClicked === imgElemMiddle){
+        currentMiddleItem.votes++;
+      } else {
+        currentRightItem.votes++;
+      }
 
-    if (objectClicked === imgElemLeft){
-      currentLeftItem.vote++;
-    } else
+      pickProduct();
 
-
-        renderThreeImages();
+    } else {
+      alert('Missed the picture!');
+    }
   } else {
-    alert('Missed the picture!');
+    allChoicesSectionElem.removeEventListener('click', handleClick);
+    alert('Voting ended.');
+    renderResults();
   }
-
- 
 }
 
+function handleResultButton(){
+  renderResults();
+}
 
-allChoicesSectionElem.addEventListener('click', handleClick)
+allChoicesSectionElem.addEventListener('click', handleClick);
 
+resultButtonElem.addEventListener('click', handleResultButton);
 
-
+pickProduct();
+renderThreeImages (currentLeftItem, currentMiddleItem, currentRightItem);
 
