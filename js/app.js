@@ -1,5 +1,7 @@
 'use strict';
 
+//===================================== Global Variables ===================================
+
 const imgElemLeft = document.getElementById('left_item_image');
 const h2ElemLeft = document.getElementById('left_item_h2');
 const imgElemMiddle = document.getElementById('middle_item_image');
@@ -9,12 +11,16 @@ const h2ElemRight = document.getElementById('right_item_h2');
 const resultsUlElem = document.getElementById('results');
 const allChoicesSectionElem = document.getElementById('all_choices');
 const resultButtonElem = document.getElementById('resultButton');
+const chartDivElem = document.getElementById('chartDiv');
 
 let counterTotal = 0;
 
 let currentLeftItem = null;
 let currentMiddleItem = null;
 let currentRightItem = null;
+
+
+//================================== Cunstructor Function ====================================
 
 function Product (imgPath, h2description) {
 
@@ -24,18 +30,20 @@ function Product (imgPath, h2description) {
   this.timeshow = 0;
 
   Product.itemsArray.push(this);
- 
-  
+
+
 }
 
 Product.itemsArray = [];
-
 
 Product.prototype.renderSingleItem = function(image, h2){
 
   image.src = this.imagePath;
   h2.textContent = this.description;
 };
+
+
+//=================================================== Functions ===============================
 
 function renderThreeImages (itemLeft, itemMiddle, itemRight){
 
@@ -77,29 +85,6 @@ function pickProduct () {
   currentRightItem.timeshow++;
 }
 
-new Product('./img/bag.jpg', 'bag');
-new Product('./img/banana.jpg', 'banana');
-new Product('./img/bathroom.jpg', 'bathroom');
-new Product('./img/boots.jpg', 'boots');
-new Product('./img/breakfast.jpg', 'breakfast');
-new Product('./img/bubblegum.jpg', 'bubblegum');
-new Product('./img/chair.jpg', 'chair');
-new Product('./img/cthulhu.jpg', 'cthulhu');
-new Product('./img/dog-duck.jpg', 'dog-duck');
-new Product('./img/dragon.jpg', 'dragon');
-new Product('./img/pen.jpg', 'pen');
-new Product('./img/pet-sweep.jpg', 'pet-sweep');
-new Product('./img/scissors.jpg', 'scissors');
-new Product('./img/shark.jpg', 'shark');
-new Product('./img/sweep.png', 'sweep');
-new Product('./img/tauntaun.jpg', 'tauntaun');
-new Product('./img/unicorn.jpg', 'unicorn');
-new Product('./img/water-can.jpg', 'water-can');
-new Product('./img/wine-glass.jpg', 'wine-glass');
-
-
-
-
 
 function renderResults (){
 
@@ -110,16 +95,68 @@ function renderResults (){
   resultsUlElem.appendChild(newH2Elem);
 
   for (let i=0; i < Product.itemsArray.length; i++){
-    let newLiElem = document.createElement('li');    
+    let newLiElem = document.createElement('li');
     newLiElem.textContent = `${Product.itemsArray[i].description} had ${Product.itemsArray[i].votes} votes and was seen ${Product.itemsArray[i].timeshow} times.`;
     resultsUlElem.appendChild(newLiElem);
   }
+}
 
+function renderChart() {
 
+  chartDivElem.innerHTML = '';
 
+  let newCanvasElem = document.createElement('canvas');
+  newCanvasElem.setAttribute('id', 'myChart');
+  chartDivElem.appendChild(newCanvasElem);
+
+  const namesArray = [];
+  const votesArray = [];
+  const timeshowArray = [];
+
+  for (let i = 0; i < Product.itemsArray.length; i++) {
+
+    let name = Product.itemsArray[i].description;
+    let vote = Product.itemsArray[i].votes;
+    let shows = Product.itemsArray[i].timeshow;
+    namesArray.push(name);
+    votesArray.push(vote);
+    timeshowArray.push(shows);
+  }
+
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: namesArray,
+      datasets: [{
+        label: '# of Views',
+        data: timeshowArray,
+        backgroundColor: 'rgba(120, 240, 22, 0.205)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        borderWidth: 1
+      },
+      {
+        label: '# of Votes',
+        data: votesArray,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        borderWidth: 1
+      }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
 
 }
 
+// ======================================== EVENT LISTENERS and HANDLERS ================================================
+ 
 function handleClick (e) {
 
   let objectClicked = e.target;
@@ -145,40 +182,40 @@ function handleClick (e) {
     allChoicesSectionElem.removeEventListener('click', handleClick);
     alert('Voting ended.');
     renderResults();
+    renderChart();
   }
 }
 
 function handleResultButton(){
   renderResults();
+  renderChart();
 }
 
 allChoicesSectionElem.addEventListener('click', handleClick);
 
 resultButtonElem.addEventListener('click', handleResultButton);
 
+//===================================== Object Instances =====================================
+
+new Product('./img/bag.jpg', 'bag');
+new Product('./img/banana.jpg', 'banana');
+new Product('./img/bathroom.jpg', 'bathroom');
+new Product('./img/boots.jpg', 'boots');
+new Product('./img/breakfast.jpg', 'breakfast');
+new Product('./img/bubblegum.jpg', 'bubblegum');
+new Product('./img/chair.jpg', 'chair');
+new Product('./img/cthulhu.jpg', 'cthulhu');
+new Product('./img/dog-duck.jpg', 'dog-duck');
+new Product('./img/dragon.jpg', 'dragon');
+new Product('./img/pen.jpg', 'pen');
+new Product('./img/pet-sweep.jpg', 'pet-sweep');
+new Product('./img/scissors.jpg', 'scissors');
+new Product('./img/shark.jpg', 'shark');
+new Product('./img/sweep.png', 'sweep');
+new Product('./img/tauntaun.jpg', 'tauntaun');
+new Product('./img/unicorn.jpg', 'unicorn');
+new Product('./img/water-can.jpg', 'water-can');
+new Product('./img/wine-glass.jpg', 'wine-glass');
+
 pickProduct();
 renderThreeImages (currentLeftItem, currentMiddleItem, currentRightItem);
-
-
-const ctx = document.getElementById('myChart').getContext('2d');
-const myChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: Product.description,
-    datasets: [{
-      label: '# of Votes',
-      data: Product.votes,
-      backgroundColor: 'rgba(255, 99, 132, 0.2)',
-      borderColor: 'rgba(153, 102, 255, 1)',
-      borderWidth: 1
-    }]
-  },
-  options: {
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
-  }
-});
-
