@@ -24,9 +24,12 @@ function Product (imgPath, h2description) {
   this.timeshow = 0;
 
   Product.itemsArray.push(this);
+ 
+  
 }
 
 Product.itemsArray = [];
+
 
 Product.prototype.renderSingleItem = function(image, h2){
 
@@ -94,6 +97,10 @@ new Product('./img/unicorn.jpg', 'unicorn');
 new Product('./img/water-can.jpg', 'water-can');
 new Product('./img/wine-glass.jpg', 'wine-glass');
 
+
+
+
+
 function renderResults (){
 
   resultsUlElem.innerHTML = '';
@@ -107,6 +114,10 @@ function renderResults (){
     newLiElem.textContent = `${Product.itemsArray[i].description} had ${Product.itemsArray[i].votes} votes and was seen ${Product.itemsArray[i].timeshow} times.`;
     resultsUlElem.appendChild(newLiElem);
   }
+
+
+
+
 }
 
 function handleClick (e) {
@@ -147,4 +158,27 @@ resultButtonElem.addEventListener('click', handleResultButton);
 
 pickProduct();
 renderThreeImages (currentLeftItem, currentMiddleItem, currentRightItem);
+
+
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: Product.description,
+    datasets: [{
+      label: '# of Votes',
+      data: Product.votes,
+      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      borderColor: 'rgba(153, 102, 255, 1)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
 
