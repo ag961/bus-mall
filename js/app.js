@@ -43,21 +43,29 @@ function renderThreeImages (itemLeft, itemMiddle, itemRight){
 
 function pickProduct () {
 
-  let leftProductIndex = Math.floor(Math.random()*Product.itemsArray.length);
-  let middleProductIndex;
-  let rightProductIndex;
+  let currentItemsArray = [];
 
-  while (middleProductIndex === undefined || middleProductIndex === leftProductIndex) {
-    middleProductIndex = Math.floor(Math.random()*Product.itemsArray.length);
+  currentItemsArray.push(currentLeftItem);
+  currentItemsArray.push(currentMiddleItem);
+  currentItemsArray.push(currentRightItem);
+
+  while (currentItemsArray.includes(currentLeftItem)){
+
+    let leftProductIndex = Math.floor(Math.random()*Product.itemsArray.length);
+    currentLeftItem = Product.itemsArray[leftProductIndex];
   }
+  currentItemsArray.push(currentLeftItem);
 
-  while (rightProductIndex === undefined || (rightProductIndex === middleProductIndex || rightProductIndex === leftProductIndex)) {
-    rightProductIndex = Math.floor(Math.random()*Product.itemsArray.length);
+  while (currentItemsArray.includes(currentMiddleItem)){
+    let middleProductIndex = Math.floor(Math.random()*Product.itemsArray.length);
+    currentMiddleItem = Product.itemsArray[middleProductIndex];
   }
+  currentItemsArray.push(currentMiddleItem);
 
-  currentLeftItem = Product.itemsArray[leftProductIndex];
-  currentMiddleItem = Product.itemsArray[middleProductIndex];
-  currentRightItem = Product.itemsArray[rightProductIndex];
+  while (currentItemsArray.includes(currentRightItem)){
+    let rightProductIndex = Math.floor(Math.random()*Product.itemsArray.length);
+    currentRightItem = Product.itemsArray[rightProductIndex];
+  }
 
   renderThreeImages (currentLeftItem, currentMiddleItem, currentRightItem);
 
