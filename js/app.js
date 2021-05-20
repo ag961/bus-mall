@@ -22,15 +22,12 @@ let currentRightItem = null;
 
 //================================== Cunstructor Function ====================================
 
-function Product (imgPath, h2description) {
+function Product (imgPath, h2description, votes, timeshow) {
 
   this.imagePath = imgPath;
   this.description = h2description;
-  this.votes = 0;
-  this.timeshow = 0;
-
-  Product.itemsArray.push(this);
-
+  this.votes = votes;
+  this.timeshow = timeshow;
 
 }
 
@@ -44,6 +41,57 @@ Product.prototype.renderSingleItem = function(image, h2){
 
 
 //=================================================== Functions ===============================
+
+const addNewPoduct =  function (imgPath, tag, votes, timeshow){
+  let product = new Product (imgPath, tag, votes, timeshow);
+  Product.itemsArray.push(product);
+
+
+};
+
+function updateStorage (){
+  const stringifiedProducts = JSON.stringify(Product.itemsArray);
+  localStorage.setItem('keyItems', stringifiedProducts);
+}
+
+function getStuffOut (){
+  let itemsFromStorage = localStorage.getItem('keyItems');
+
+  if (itemsFromStorage){
+    let parsedItems = JSON.parse(itemsFromStorage);
+    console.log(parsedItems);
+    for (let item of parsedItems){
+      addNewPoduct(item.imagePath, item.description, item.votes, item.timeshow);
+    }
+/*     pickProduct();
+    renderThreeImages (currentLeftItem, currentMiddleItem, currentRightItem); */
+
+  } else {
+    addNewPoduct ('./img/bag.jpg', 'bag', 0, 0);
+    addNewPoduct ('./img/banana.jpg', 'banana', 0, 0);
+    addNewPoduct ('./img/bathroom.jpg', 'bathroom', 0, 0);
+    addNewPoduct ('./img/boots.jpg', 'boots', 0, 0);
+    addNewPoduct ('./img/breakfast.jpg', 'breakfast', 0, 0);
+    addNewPoduct ('./img/bubblegum.jpg', 'bubblegum', 0, 0);
+    addNewPoduct ('./img/chair.jpg', 'chair', 0, 0);
+    addNewPoduct ('./img/cthulhu.jpg', 'cthulhu', 0, 0);
+    addNewPoduct ('./img/dog-duck.jpg', 'dog-duck', 0, 0);
+    addNewPoduct ('./img/dragon.jpg', 'dragon', 0, 0);
+    addNewPoduct ('./img/pen.jpg', 'pen', 0, 0);
+    addNewPoduct ('./img/pet-sweep.jpg', 'pet-sweep', 0, 0);
+    addNewPoduct ('./img/scissors.jpg', 'scissors', 0, 0);
+    addNewPoduct ('./img/shark.jpg', 'shark', 0, 0);
+    addNewPoduct ('./img/sweep.png', 'sweep', 0, 0);
+    addNewPoduct ('./img/tauntaun.jpg', 'tauntaun', 0, 0);
+    addNewPoduct ('./img/unicorn.jpg', 'unicorn', 0, 0);
+    addNewPoduct ('./img/water-can.jpg', 'water-can', 0, 0);
+    addNewPoduct ('./img/wine-glass.jpg', 'wine-glass', 0, 0);
+  }
+
+  pickProduct();
+  renderThreeImages (currentLeftItem, currentMiddleItem, currentRightItem);
+
+}
 
 function renderThreeImages (itemLeft, itemMiddle, itemRight){
 
@@ -160,7 +208,7 @@ function renderChart() {
 function handleClick (e) {
 
   let objectClicked = e.target;
-  if (counterTotal <25){
+  if (counterTotal <5){
     if (objectClicked === imgElemLeft || objectClicked === imgElemMiddle || objectClicked === imgElemRight) {
 
       counterTotal++;
@@ -174,15 +222,16 @@ function handleClick (e) {
       }
 
       pickProduct();
-
+      updateStorage();
+      
     } else {
-      alert('Missed the picture!');
+/*       alert('Missed the picture!'); */
     }
   } else {
     allChoicesSectionElem.removeEventListener('click', handleClick);
-    alert('Voting ended.');
     renderResults();
     renderChart();
+    
   }
 }
 
@@ -197,25 +246,8 @@ resultButtonElem.addEventListener('click', handleResultButton);
 
 //===================================== Object Instances =====================================
 
-new Product('./img/bag.jpg', 'bag');
-new Product('./img/banana.jpg', 'banana');
-new Product('./img/bathroom.jpg', 'bathroom');
-new Product('./img/boots.jpg', 'boots');
-new Product('./img/breakfast.jpg', 'breakfast');
-new Product('./img/bubblegum.jpg', 'bubblegum');
-new Product('./img/chair.jpg', 'chair');
-new Product('./img/cthulhu.jpg', 'cthulhu');
-new Product('./img/dog-duck.jpg', 'dog-duck');
-new Product('./img/dragon.jpg', 'dragon');
-new Product('./img/pen.jpg', 'pen');
-new Product('./img/pet-sweep.jpg', 'pet-sweep');
-new Product('./img/scissors.jpg', 'scissors');
-new Product('./img/shark.jpg', 'shark');
-new Product('./img/sweep.png', 'sweep');
-new Product('./img/tauntaun.jpg', 'tauntaun');
-new Product('./img/unicorn.jpg', 'unicorn');
-new Product('./img/water-can.jpg', 'water-can');
-new Product('./img/wine-glass.jpg', 'wine-glass');
+getStuffOut();
 
-pickProduct();
-renderThreeImages (currentLeftItem, currentMiddleItem, currentRightItem);
+
+
+
