@@ -204,11 +204,11 @@ function renderChart() {
 }
 
 // ======================================== EVENT LISTENERS and HANDLERS ================================================
- 
+
 function handleClick (e) {
 
   let objectClicked = e.target;
-  if (counterTotal <5){
+  if (counterTotal <25){
     if (objectClicked === imgElemLeft || objectClicked === imgElemMiddle || objectClicked === imgElemRight) {
 
       counterTotal++;
@@ -223,15 +223,14 @@ function handleClick (e) {
 
       pickProduct();
       updateStorage();
-      
+
     } else {
-/*       alert('Missed the picture!'); */
+      alert('Missed the picture!');
     }
   } else {
     allChoicesSectionElem.removeEventListener('click', handleClick);
     renderResults();
     renderChart();
-    
   }
 }
 
